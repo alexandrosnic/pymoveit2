@@ -223,6 +223,9 @@ class MoveIt2:
         # Event that enables waiting until async future is done
         self.__future_done_event = threading.Event()
 
+        # External state for the state machine
+        self.done_moving = False
+
     def move_to_pose(
         self,
         position: Union[Point, Tuple[float, float, float]],
@@ -1160,8 +1163,9 @@ class MoveIt2:
             self._node.get_logger().error(
                 f"Action '{self.__follow_joint_trajectory_action_client._action_name}' was unsuccessful: {res.result().status}."
             )
-
+        self._node.get_logger().info("Succesful movement")
         self.__is_executing = False
+        self.done_moving = True
 
     @classmethod
     def __init_move_action_goal(
