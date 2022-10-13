@@ -225,6 +225,7 @@ class MoveIt2:
 
         # External state for the state machine
         self.done_moving = False
+        self.replan_trajectory = False
 
     def move_to_pose(
         self,
@@ -939,7 +940,7 @@ class MoveIt2:
             return None
 
     def _plan_kinematic_path(
-        self, wait_for_server_timeout_sec: Optional[float] = 1.0
+        self, wait_for_server_timeout_sec: Optional[float] = 2.0
     ) -> Optional[JointTrajectory]:
 
         # Re-use request from move action goal
@@ -977,6 +978,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Planning failed! Error code: {res.error_code.val}."
             )
+            self.replan_trajectory = True
             return None
 
     def _plan_cartesian_path(
@@ -1042,6 +1044,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Planning failed! Error code: {res.error_code.val}."
             )
+            self.replan_trajectory = True
             return None
 
     def _send_goal_async_move_action(
@@ -1095,6 +1098,7 @@ class MoveIt2:
             )
 
         self.__is_executing = False
+        self.done_moving = True
 
     def _send_goal_async_follow_joint_trajectory(
         self,
