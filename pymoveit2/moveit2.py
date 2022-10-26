@@ -243,7 +243,8 @@ class MoveIt2:
         Plan and execute motion based on previously set goals. Optional arguments can be
         passed in to internally use `set_pose_goal()` to define a goal during the call.
         """
-
+        self.done_moving = False
+        self.replan_trajectory = False
         if self.__execute_via_moveit:
             if self.__ignore_new_calls_while_executing and self.__is_executing:
                 self._node.get_logger().warn(
@@ -973,6 +974,7 @@ class MoveIt2:
         ).motion_plan_response
 
         if MoveItErrorCodes.SUCCESS == res.error_code.val:
+            # self.replan_trajectory = False
             return res.trajectory.joint_trajectory
         else:
             self._node.get_logger().warn(
@@ -1039,6 +1041,7 @@ class MoveIt2:
         res = self._plan_cartesian_path_service.call(self.__cartesian_path_request)
 
         if MoveItErrorCodes.SUCCESS == res.error_code.val:
+            # self.replan_trajectory = False
             return res.solution.joint_trajectory
         else:
             self._node.get_logger().warn(
