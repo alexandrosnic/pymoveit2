@@ -709,6 +709,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Service '{self.__compute_fk_client.srv_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             return None
 
         res = self.__compute_fk_client.call(self.__compute_fk_req)
@@ -795,6 +796,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Service '{self.__compute_ik_client.srv_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             return None
 
         res = self.__compute_ik_client.call(self.__compute_ik_req)
@@ -925,6 +927,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Action server '{self.__move_action_client._action_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             return None
 
         move_action_result = self.__move_action_client.send_goal(
@@ -967,6 +970,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Service '{self._plan_kinematic_path_service.srv_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             return None
 
         res = self._plan_kinematic_path_service.call(
@@ -1036,6 +1040,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Service '{self._plan_cartesian_path_service.srv_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             return None
 
         res = self._plan_cartesian_path_service.call(self.__cartesian_path_request)
@@ -1063,6 +1068,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Action server '{self.__move_action_client._action_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             self.__is_motion_requested = False
             return
 
@@ -1082,6 +1088,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Action '{self.__move_action_client._action_name}' was rejected."
             )
+            self.replan_trajectory = True
             self.__is_motion_requested = False
             return
 
@@ -1116,6 +1123,7 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Action server '{self.__follow_joint_trajectory_action_client._action_name}' is not yet available. Better luck next time!"
             )
+            self.replan_trajectory = True
             self.__is_motion_requested = False
             return None
 
@@ -1146,6 +1154,10 @@ class MoveIt2:
             self._node.get_logger().warn(
                 f"Action '{self.__follow_joint_trajectory_action_client._action_name}' was rejected."
             )
+            # self._node.get_logger().warn(
+            #     f"Random message."
+            # )
+            self.replan_trajectory = True
             self.__is_motion_requested = False
             return
 
